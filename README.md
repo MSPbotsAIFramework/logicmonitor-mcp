@@ -106,15 +106,15 @@ curl http://localhost:8080/health
 
 No credentials are required for the health endpoint.
 
-## 授权参数说明 (Authentication)
+## Authentication parameters (Authentication)
 
 Every request to `/mcp` must include the following HTTP headers:
 
-| Header | 类型 | 是否必填 | 默认值 | 枚举值 | 字段描述 | Example |
+| Header | Type | Required | Default | Allowed values | Description | Example |
 |---|---|---|---|---|---|---|
-| `X-LogicMonitor-Company` | string | 必填 | 无 | 无(自由文本) | LogicMonitor 门户子域名,即 `https://{company}.logicmonitor.com` 中的 `{company}` 部分,同时也是签名算法中 base URL 的一部分。 | `X-LogicMonitor-Company: acme` |
-| `X-LogicMonitor-Access-Id` | string | 必填 | 无 | 无(自由文本) | LMv1 API Token 的 Access Id,与 MSPbots 集成配置里的 "Access Id" 字段一致。 | `X-LogicMonitor-Access-Id: abcd1234efgh5678` |
-| `X-LogicMonitor-Access-Key` | string | 必填 | 无 | 无(自由文本,敏感信息) | LMv1 API Token 的 Access Key(密钥),用于对每次请求做 HMAC-SHA256 签名,本服务只在本次请求生命周期内使用,不做持久化存储。 | `X-LogicMonitor-Access-Key: <access_key>` |
+| `X-LogicMonitor-Company` | string | Yes | None | None (free text) | LogicMonitor portal subdomain, i.e. the `{company}` part of `https://{company}.logicmonitor.com`; it is also part of the base URL in the signing algorithm. | `X-LogicMonitor-Company: acme` |
+| `X-LogicMonitor-Access-Id` | string | Yes | None | None (free text) | Access Id of the LMv1 API Token; same as the "Access Id" field in the MSPbots integration configuration. | `X-LogicMonitor-Access-Id: abcd1234efgh5678` |
+| `X-LogicMonitor-Access-Key` | string | Yes | None | None (free text, sensitive) | Access Key (secret) of the LMv1 API Token, used to sign each request with HMAC-SHA256; this service uses it only during the lifetime of the current request and does not persist it. | `X-LogicMonitor-Access-Key: <access_key>` |
 
 Missing any of the three headers returns `401 Unauthorized`.
 
@@ -145,46 +145,46 @@ Pagination: `size` defaults to **50** and is server-side clamped to a hard cap o
 
 ### Devices (3)
 
-| Tool | 功能 | 参数 |
+| Tool | Function | Parameters |
 |---|---|---|
-| `logicmonitor_get_devices` | 列出监控设备 | `size=50` (max 1000), `offset=0`, `sort?`, `filter?`, `fields?` |
-| `logicmonitor_get_device_groups` | 列出设备分组 | `size=50` (max 1000), `offset=0`, `sort?`, `filter?`, `fields?` |
-| `logicmonitor_get_device_properties` | 查设备的自定义/系统属性 | `device_id`, `size=50` (max 1000), `offset=0`, `filter?` |
+| `logicmonitor_get_devices` | List monitored devices | `size=50` (max 1000), `offset=0`, `sort?`, `filter?`, `fields?` |
+| `logicmonitor_get_device_groups` | List device groups | `size=50` (max 1000), `offset=0`, `sort?`, `filter?`, `fields?` |
+| `logicmonitor_get_device_properties` | Get a device's custom/system properties | `device_id`, `size=50` (max 1000), `offset=0`, `filter?` |
 
 ### Device DataSources (2)
 
-| Tool | 功能 | 参数 |
+| Tool | Function | Parameters |
 |---|---|---|
-| `logicmonitor_get_device_datasources` | 列出设备已应用的 DataSource | `device_id`, `size=50` (max 1000), `offset=0`, `filter?`, `fields?` |
-| `logicmonitor_get_device_datasource_data` | 获取 DataSource 采集的数据点 | `device_id`, `source_id`, `start?`, `end?` |
+| `logicmonitor_get_device_datasources` | List DataSources applied to a device | `device_id`, `size=50` (max 1000), `offset=0`, `filter?`, `fields?` |
+| `logicmonitor_get_device_datasource_data` | Get data points collected by a DataSource | `device_id`, `source_id`, `start?`, `end?` |
 
 ### Alerts (3)
 
-| Tool | 功能 | 参数 |
+| Tool | Function | Parameters |
 |---|---|---|
-| `logicmonitor_get_alerts` | 列出活跃/历史告警 | `size=50` (max 1000), `offset=0`, `sort?`, `filter?`, `fields?` |
-| `logicmonitor_get_alert_detail` | 查单条告警详情 | `alert_id` |
-| `logicmonitor_get_alert_rules` | 列出告警升级规则 | `size=50` (max 1000), `offset=0`, `filter?` |
+| `logicmonitor_get_alerts` | List active/historical alerts | `size=50` (max 1000), `offset=0`, `sort?`, `filter?`, `fields?` |
+| `logicmonitor_get_alert_detail` | Get details of a single alert | `alert_id` |
+| `logicmonitor_get_alert_rules` | List alert escalation rules | `size=50` (max 1000), `offset=0`, `filter?` |
 
 ### Admin (2)
 
-| Tool | 功能 | 参数 |
+| Tool | Function | Parameters |
 |---|---|---|
-| `logicmonitor_get_users` | 列出门户用户(admin)账号 | `size=50` (max 1000), `offset=0`, `filter?`, `fields?` |
-| `logicmonitor_get_roles` | 列出角色(权限集) | `size=50` (max 1000), `offset=0`, `filter?` |
+| `logicmonitor_get_users` | List portal user (admin) accounts | `size=50` (max 1000), `offset=0`, `filter?`, `fields?` |
+| `logicmonitor_get_roles` | List roles (permission sets) | `size=50` (max 1000), `offset=0`, `filter?` |
 
 ### Reports (2)
 
-| Tool | 功能 | 参数 |
+| Tool | Function | Parameters |
 |---|---|---|
-| `logicmonitor_get_reports` | 列出报表 | `size=50` (max 1000), `offset=0`, `filter?`, `fields?` |
-| `logicmonitor_get_report_groups` | 列出报表分组 | `size=50` (max 1000), `offset=0`, `filter?` |
+| `logicmonitor_get_reports` | List reports | `size=50` (max 1000), `offset=0`, `filter?`, `fields?` |
+| `logicmonitor_get_report_groups` | List report groups | `size=50` (max 1000), `offset=0`, `filter?` |
 
 ### SDT (1)
 
-| Tool | 功能 | 参数 |
+| Tool | Function | Parameters |
 |---|---|---|
-| `logicmonitor_get_sdts` | 列出计划停机(Scheduled Down Time)条目 | `size=50` (max 1000), `offset=0`, `filter?` |
+| `logicmonitor_get_sdts` | List Scheduled Down Time (SDT) entries | `size=50` (max 1000), `offset=0`, `filter?` |
 
 ## Error Handling
 
@@ -203,7 +203,7 @@ Tool errors are returned as a JSON string (not a protocol-level exception), so a
 - Each retry attempt recomputes the LMv1 signature from scratch (it embeds the current epoch), so a retried request is never sent with a stale/expired signature.
 - A single shared `httpx.AsyncClient` connection pool is reused for the process lifetime.
 
-## 测试示例 (Test Example)
+## Test Example
 
 List devices:
 
